@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta name="author" content="Edina Soljankic">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700&display=swap" rel="stylesheet">
+    <title>Assignment - Kreiranje analognog časovnika</title>
+
+    <style>
+    body {
+        background-color: rgb(245, 238, 238);
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    h1 {
+        font-family: 'M PLUS Rounded 1c', sans-serif;
+        font-size: 68px;
+        margin: 0 auto;
+        color: white;
+        text-shadow: 2px 2px 4px grey;
+    }
+
+</style>
+
+</head>
+
+
+<body>
+
+    <h1>Analog Clock</h1>
+
+    <canvas id="clock" width="450" height="450"></canvas>
+
+    <script>
+        window.onload = init;
+
+        function init() {
+            let canvas = document.getElementById("clock");
+
+            if (canvas.getContext) {
+                let ctx = canvas.getContext("2d");
+
+                update(ctx);
+
+            } else (
+                alert("Canvas in not supported")
+            )
+        }
+
+        function update(ctx) {
+
+            let date = new Date();
+
+            ctx.save();
+
+            ctx.clearRect(0, 0, 450, 450)
+
+            // circle
+            ctx.beginPath();
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'white';
+            ctx.shadowOffsetX = 1;
+            ctx.shadowOffsetY = 1;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = 'rgba(128, 128, 128, 0.4)';
+            ctx.arc(225, 225, 200, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.fill();
+            ctx.closePath();
+            ctx.restore();
+            ctx.save();
+
+            //small circle
+            ctx.beginPath();
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'white';
+            ctx.shadowOffsetX = 1;
+            ctx.shadowOffsetY = 1;
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = 'rgba(128, 128, 128, 0.4)';
+            ctx.arc(225, 225, 10, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.fill();
+            ctx.closePath();
+            ctx.restore();
+            ctx.save();
+
+            // hour
+            ctx.beginPath();
+            let hours = date.getHours();
+            ctx.strokeStyle = "grey";
+            ctx.lineWidth = 4;
+            ctx.translate(225, 225);
+            ctx.rotate(-180 * Math.PI / 180);
+            ctx.rotate(hours * 30 * Math.PI / 180);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, 100);
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
+            ctx.save();
+
+            // minute
+            let minutes = date.getMinutes();
+            ctx.strokeStyle = "#2b2e81";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.translate(225, 225);
+            ctx.rotate(-180 * Math.PI / 180);
+            ctx.rotate(minutes * 6 * Math.PI / 180);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, 130);
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
+            ctx.save();
+
+            // seconds
+            let seconds = date.getSeconds();
+            ctx.strokeStyle = "#792929";
+            ctx.beginPath();
+            ctx.translate(225, 225);
+            ctx.rotate(-180 * Math.PI / 180);
+            ctx.rotate(seconds * 6 * Math.PI / 180);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, 180);
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
+            ctx.save();
+
+            // hour line
+            var i = 12;
+            while (i > 0) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'grey'
+                ctx.translate(225, 225);
+                let angle = (i * 30) * Math.PI / 180;
+                ctx.rotate(angle);
+                ctx.translate(0, - 180);
+                ctx.save();
+
+                ctx.translate(0, 0);
+                ctx.rotate(-angle);
+
+                ctx.restore();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, 15);
+                ctx.stroke();
+                ctx.closePath();
+                ctx.restore();
+
+                i--;
+            }
+
+            requestAnimationFrame(function () { update(ctx) })
+
+        }
+    </script>
+
+</body>
+
+</html>
